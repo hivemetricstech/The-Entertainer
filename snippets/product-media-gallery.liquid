@@ -1,0 +1,165 @@
+{%- liquid
+  if section.settings.hide_variants and variant_images.size == product.media.size
+    assign single_media_visible = true
+  endif
+
+  assign media_count = product.media.size
+  if section.settings.hide_variants and media_count >= 1 and variant_images.size > 0
+    assign media_count = media_count | minus: variant_images.size | plus: 1
+  endif
+
+  if media_count == 1 or single_media_visible
+    assign single_media_visible_mobile = true
+  endif
+
+  if media_count == 0 or single_media_visible_mobile or section.settings.mobile_thumbnails == 'show' or section.settings.mobile_thumbnails == 'columns' and media_count < 3
+    assign hide_mobile_slider = true
+  endif
+
+  if section.settings.media_size == 'large'
+    assign media_width = 0.65
+  elsif section.settings.media_size == 'medium'
+    assign media_width = 0.55
+  elsif section.settings.media_size == 'small'
+    assign media_width = 0.45
+  endif
+
+  assign id_append = ''
+  if is_duplicate
+    assign id_append = '-duplicate'
+  endif
+-%}
+
+<product-gallery class="product-gallery">
+  <div class="product-gallery__images splide">
+    <div class="splide__track">
+      <div class="splide__list">
+        {%- for media in product.media -%}
+          <div
+            class="product-gallery__image splide__slide {% if media.id == product.selected_or_first_available_variant.featured_media.id or product.media.size == 1 %}product-gallery__image--active{% endif %}"
+            data-media-id="{{ media.id }}"
+          >
+            {% render 'product-thumbnail',
+              media: media,
+              loop: section.settings.enable_video_looping,
+              modal_id: section.id,
+              xr_button: true,
+              media_width: media_width,
+              media_fit: section.settings.media_fit,
+              constrain_to_viewport: section.settings.constrain_to_viewport,
+              lazy_load: false
+            %}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  {%- if product.media.size >= 1 -%}
+    <div class="product-gallery__thumbnails splide">
+      <div class="splide__track">
+        <ul class="product-gallery__nav splide__list">
+          {%- capture sizes -%}
+            (min-width: {{ settings.page_width }}px) calc(({{ settings.page_width | minus: 100 | times: media_width | round }} - 4rem) / 4),
+            (min-width: 990px) calc(({{ media_width | times: 100 }}vw - 4rem) / 4),
+            (min-width: 750px) calc((100vw - 15rem) / 8),
+            calc((100vw - 8rem) / 3)
+          {%- endcapture -%}
+          {%- for media in product.media -%}
+            <li
+              class="product-gallery__nav-item splide__slide {% if media.id == product.selected_or_first_available_variant.featured_media.id or product.media.size == 1 %}product-gallery__nav-item--active{% endif %}"
+              data-media-id="{{ media.id }}"
+            >
+              {%- capture thumbnail_id -%}
+                Thumbnail-{{ section.id }}-0{{ id_append }}
+              {%- endcapture -%}
+              <div class="thumbnail-wrap">
+                <img
+                  src="{{ media.preview_image | image_url: width: 432 }}"
+                  loading="lazy"
+                  width="70"
+                  height="70"
+                  style="max-height: 70px; object-fit: contain;"
+                  alt="media.alt"
+                >
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  {%- endif -%}
+</product-gallery>
+
+
+<script>
+  var mainBody = document.querySelector('body')
+  if (mainBody.classList.contains('product-template')){
+    document.addEventListener( 'DOMContentLoaded', function() {
+      var main = new Splide( '.product-gallery__images', {
+        type       : 'loop',
+        pagination : false,
+        arrows     : true,
+        cover      : true,
+      } );
+  
+      var thumbnails = new Splide( '.product-gallery__thumbnails', {
+        rewind          : true,
+        fixedWidth      : 100,
+        fixedHeight     : 100,
+        isNavigation    : true,
+        arrows          : {% if product.media.size > 5 %}true{% else %}false{% endif %},
+        gap             : 10,
+        focus           : 'left',
+        pagination      : false,
+        cover           : true,
+        dragMinThreshold: {
+          mouse: 4,
+          touch: 10,
+        },
+        breakpoints : {
+          640: {
+            fixedWidth  : 75,
+            fixedHeight : 75,
+          },
+        },
+      } );
+  
+      main.sync( thumbnails );
+      main.mount();
+      thumbnails.mount();
+    });
+  } else {
+    var main = new Splide( '.product-gallery__images', {
+      type       : 'loop',
+      pagination : false,
+      arrows     : true,
+      cover      : true,
+    } );
+
+    var thumbnails = new Splide( '.product-gallery__thumbnails', {
+      rewind          : true,
+      fixedWidth      : 100,
+      fixedHeight     : 100,
+      isNavigation    : true,
+      arrows          : {% if product.media.size > 5 %}true{% else %}false{% endif %},
+      gap             : 10,
+      focus           : 'left',
+      pagination      : false,
+      cover           : true,
+      dragMinThreshold: {
+        mouse: 4,
+        touch: 10,
+      },
+      breakpoints : {
+        640: {
+          fixedWidth  : 75,
+          fixedHeight : 75,
+        },
+      },
+    } );
+
+    main.sync( thumbnails );
+    main.mount();
+    thumbnails.mount();
+  }
+</script>

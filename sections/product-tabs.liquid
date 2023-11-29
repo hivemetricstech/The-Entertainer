@@ -1,0 +1,231 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="product__tabs-section">
+  <div class="container page-width">
+    
+    <div class="more-info-tabs__column is-mobile-hidden">
+      <ul class="product_tabs page-width">
+        {% if section.settings.enable_description and section.settings.description_title != blank %}
+          <li class="tab-button active" data-tab="tab1">{{ section.settings.description_title }}</li>
+        {% endif %}
+        {% if section.settings.title_1 != blank %}
+          <li class="tab-button{% if section.settings.enable_description != true %} active{% endif %}" data-tab="tab2">{{ section.settings.title_1 }}</li>
+        {% endif %}
+        {% if section.settings.title_2 != blank %}
+          <li class="tab-button" data-tab="tab3">{{ section.settings.title_2 }}</li>
+        {% endif %}
+      </ul>
+      <div class="tab-pane page-width">
+        {% if section.settings.enable_description and section.settings.description_title != blank %}
+          <div class="tab-panel js-first_description active text-black" id="tab1">
+            {{ product.description }}
+          </div>
+        {% endif %}
+        <div class="tab-panel js-first_description{% if section.settings.enable_description != true %} active{% endif %}" id="tab2">
+          {{ section.settings.text_1 }}
+        </div>                              
+        <div class="tab-panel js-second_description" id="tab3">
+          {{ section.settings.text_2 }}
+        </div>                
+      </div>            
+    </div>
+    
+    <div class="more-info-tabs__column-mobile is-desktop-hidden page-width">      
+      {% if section.settings.enable_description and section.settings.description_title != blank %}
+      <div class="product_tabs-info-mobile product_tabs-info-mobile-des">
+        {% if section.settings.enable_description and section.settings.description_title != blank %}
+          <span class="tab-button-mobile" data-tab="tab1">{{ section.settings.description_title }}{%- render 'icon-down' -%}</span>  
+        {% endif %}
+        {% if section.settings.enable_description and section.settings.description_title != blank %}
+          <div class="tab-pane-info-mobile active" id="tab1">
+            <div class="tab-panel-info-mobile js-first_description text-black">
+              {{ product.description | strip_html }}
+            </div>
+          </div> 
+        {% endif %}        
+      </div>
+      {% endif %}
+      {% if section.settings.title_1 != blank %}
+        <div class="product_tabs-info-mobile product_tabs-info-mobile-des">
+          <span class="tab-button-mobile" data-tab="tab2">{{ section.settings.title_1 }}{%- render 'icon-down' -%}</span>  
+          <div class="tab-pane-info-mobile" id="tab2">                  
+              {{ section.settings.text_1 }}
+          </div>
+        </div>
+      {% endif %}
+      {% if section.settings.title_2 != blank %}
+      <div class="product_tabs-info-mobile product_tabs-info-mobile-benefits">                
+        <span class="tab-button-mobile" data-tab="tab3">{{ section.settings.title_2 }}</span>                
+        <div class="tab-pane-info-mobile" id="tab3">                
+            {{ section.settings.text_2 }}
+        </div>
+      </div>
+    {% endif %}
+    </div>
+    
+  </div>
+</section>
+
+<script>
+  function handleTabButtonClick(event) {
+    const tabButton = event.target;
+    const tabValue = tabButton.getAttribute('data-tab');
+    const tabPanel = document.getElementById(tabValue);
+  
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+      button.classList.remove('active');
+    });
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    tabPanels.forEach(panel => {
+      panel.classList.remove('active');
+    });
+    tabPanel.classList.add('active');
+    tabButton.classList.add('active');
+  }
+
+  const tabButtons = document.querySelectorAll('.tab-button');
+  tabButtons.forEach(button => {
+    button.addEventListener('click', handleTabButtonClick);
+  });
+
+  // function handleTabButtonMobileClick(event) {
+  //   const tabButtonMobile = event.target;
+  //   const tabValue = tabButtonMobile.getAttribute('data-tab');
+  //   const tabPaneMobile = document.querySelector('.tab-pane-info-mobile#' + tabValue);
+
+  //   const tabMobilePans = document.querySelectorAll('.tab-pane-info-mobile');
+  //   tabMobilePans.forEach(tabMobilePan => {
+  //     tabMobilePan.classList.remove('active');
+  //   });
+  
+  //   const tabButtonsMobile = document.querySelectorAll('.tab-button-mobile');
+  //   tabButtonsMobile.forEach(buttonMobile => {
+  //     buttonMobile.classList.remove('active');
+  //   });
+    
+  //   tabPaneMobile.classList.add('active');
+  //   tabButtonMobile.classList.add('active');
+  // }
+  
+  // const tabButtonsMobile = document.querySelectorAll('.tab-button-mobile');
+  // tabButtonsMobile.forEach(buttonMobile => {
+  //   buttonMobile.addEventListener('click', handleTabButtonMobileClick);
+  // });
+
+  function handleTabButtonMobileClick(event) {
+    const tabButtonMobile = event.target;
+    const tabValue = tabButtonMobile.getAttribute('data-tab');
+    const tabPaneMobile = document.querySelector('.tab-pane-info-mobile#' + tabValue);
+  
+    tabPaneMobile.classList.toggle('active');
+  
+    const tabMobilePans = document.querySelectorAll('.tab-pane-info-mobile:not(#' + tabValue + ')');
+    tabMobilePans.forEach(tabMobilePan => {
+      tabMobilePan.classList.remove('active');
+    });
+  
+    tabButtonMobile.classList.toggle('active');
+  
+    const tabButtonsMobile = document.querySelectorAll('.tab-button-mobile:not(#' + tabValue + ')');
+    tabButtonsMobile.forEach(buttonMobile => {
+      buttonMobile.classList.remove('active');
+    });
+  }
+  
+  const tabButtonsMobile = document.querySelectorAll('.tab-button-mobile');
+  tabButtonsMobile.forEach(buttonMobile => {
+    buttonMobile.addEventListener('click', handleTabButtonMobileClick);
+  });
+
+
+</script>
+
+{% schema %}
+  {
+    "name": "Product Tabs",
+    "tag": "section",
+    "class": "section jsProductTabs",
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    },
+    "settings": [
+      {
+        "type": "text",
+        "id": "description_title",
+        "label": "Description Title",
+        "default": "Details"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_description",
+        "label": "Enable Product Descripton"
+      },
+      {
+        "type": "text",
+        "id": "title_1",
+        "label": "Title",
+        "default": "ADDITIONAL DESCRIPTION"
+      },
+      {
+        "type": "richtext",
+        "id": "text_1",
+        "label": "Text",
+        "default": "<p>Content</p>"
+      },
+      {
+        "type": "text",
+        "id": "title_2",
+        "label": "Title",
+        "default": "SHIPPING & DELIVERY"
+      },
+      {
+        "type": "richtext",
+        "id": "text_2",
+        "label": "Text",
+        "default": "<p>Content</p>"
+      },      
+      {
+        "type": "header",
+        "content": "t:sections.all.padding.section_padding_heading"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_top",
+        "default": 36
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_bottom",
+        "default": 36
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product Tabs"      
+      }
+    ]
+  }
+{% endschema %}

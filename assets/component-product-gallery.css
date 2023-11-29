@@ -1,0 +1,130 @@
+/* .product-gallery {
+  display: flex;
+  flex-wrap: wrap;
+} */
+
+.product-gallery__nav-item .product__modal-opener .product__media-icon {
+    display: none;
+}
+
+.product-gallery .slider-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9;
+  border-radius: 50%;
+}
+
+.product-gallery .slider-button--prev svg {
+    transform: scaleX(-1);
+}
+
+.product-gallery__nav-item:hover {
+    border-color: #da291c;
+}
+
+.product-gallery__nav-item.product-gallery__nav-item--active {
+    border-color: #da291c;
+}
+
+.product-gallery .slider-button svg {
+    width: 40px;
+}
+
+.product-gallery .slider-button:not([disabled]):hover {
+  border-color: rgba(var(--color-foreground), 0.3);
+}
+
+.product-gallery .product-gallery__images .slider-button[disabled] .icon{
+    color: #ffffff82 !important;
+}
+
+.product-gallery .slider-button:disabled {
+/*   display: none; */
+}
+
+.product-gallery .slider-button--prev {
+  left: 0;
+  border-left-width: 0;
+}
+
+.product-gallery .slider-button--next {
+  right: 0;
+  border-right-width: 0;
+}
+
+.product-gallery__nav {
+  width: 80px;
+  list-style: none;
+  margin: 0 .5rem 0 0;
+  padding: 0;
+  height: 100%;
+  overflow-y: auto;
+  display: none;
+}
+
+.product-gallery__nav::-webkit-scrollbar { 
+  display: none; 
+}
+
+.product-gallery__nav-item {
+    display: block;
+    cursor: pointer;
+    margin: 0 10px;
+    padding: 10px;
+    width: 75px;
+    height: 75px;
+    border: 3.74px solid #eaeaea;
+    border-radius: 10px;
+}
+
+.product-gallery__nav-item + .product-gallery__nav-item {
+/*   margin-top: .5rem; */
+}
+
+.product-gallery__nav-item img {
+  width: 100%;
+  display: block;
+}
+
+.product-gallery__images {
+    flex-grow: 1;
+    height: fit-content;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 500px;
+    margin-bottom: 10px;
+    min-width: 100%;
+}
+
+/* .product-gallery__image {
+  display: none;
+} */
+
+.product-gallery__image.product-gallery__image--active {
+  display: block;
+  width: 100%;
+}
+
+.product-gallery__nav {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 0;
+    flex-direction: row;
+    width: 100%;
+    max-height: 75px;
+    justify-content: center;
+}
+
+@media only screen and (max-width: 767px) {
+
+  .product-gallery__images {
+      min-height: auto;
+  }
+
+  .product-gallery {
+      min-height: 450px;
+  }
+  
+}

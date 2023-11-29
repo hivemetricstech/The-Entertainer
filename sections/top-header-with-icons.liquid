@@ -1,0 +1,125 @@
+{% liquid
+  assign object = section.settings
+%}
+
+<div class="section {{ object.css_class }}">
+  <div class="container">
+    <div class="one-half medium-down--one-half column buttons-wrapper">
+      <div class="buttons">
+        {% if object.button_text != blank %}
+          <a href="{{ object.button_link }}" class="button button--primary">{{ object.button_text }}</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="one-half medium-down--one-half column header__action-icons-wrap">
+      {% if object.location_text != blank %}
+        <div class="store__locater--icon-wrap top--icons-wrap">
+          <div class="icon">
+            <a class="header-top__icons-link" href="{{ object.location_link }}">{% render 'icon-location' %}</a>
+          </div>
+          <div class="text">
+            <a class="header-top__icons-link" href="{{ object.location_link }}">
+              {{ object.location_text }}
+            </a>
+          </div>
+        </div>
+      {% endif %}
+      {% if object.help_text != blank %}
+      <div class="help--icon-wrap top--icons-wrap">
+        <div class="icon">
+          <a class="header-top__icons-link" href="{{ object.help_link }}">{% render 'icon-help' %}</a>          
+        </div>
+        <div class="text">
+          <a class="header-top__icons-link" href="{{ object.help_link }}">
+            {{ object.help_text }}
+          </a>
+        </div>
+      </div>
+      {% endif %}
+      {%- if shop.customer_accounts_enabled -%}        
+      <div class="account--icon-wrap top--icons-wrap">
+        <div class="icon">
+          <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="header__icon header__icon--account link focus-inset">
+            {% render 'icon-account-2' %}                    
+          </a>
+        </div>
+        <div class="text">
+          <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="header__icon header__icon--account link focus-inset{% if section.settings.menu != blank %} small-hide{% endif %}">
+            <span class="account--icon-text-wrap">
+              {%- liquid
+                if customer
+                  echo 'customer.account_fallback' | t
+                else
+                  echo object.account_text
+                endif
+              -%}
+            </span>
+          </a>
+        </div>
+      </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Top Header Icons",
+    "class":"top__header--with-icons section-header",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Button"
+      },
+      {
+        "type" : "text",
+        "id" : "button_text",
+        "label" : "Button Text"
+      },
+      {
+        "type" : "url",
+        "id" : "button_link",
+        "label" : "Button Link"
+      },
+      {
+        "type": "header",
+        "content": "Icons"
+      },
+      {
+        "type" : "text",
+        "id" : "location_text",
+        "label" : "Location Title"
+      },
+      {
+        "type" : "url",
+        "id" : "location_link",
+        "label" : "Location Link"
+      },
+      {
+        "type" : "text",
+        "id" : "help_text",
+        "label" : "Help Title"
+      },
+      {
+        "type" : "url",
+        "id" : "help_link",
+        "label" : "Help Link"
+      },
+      {
+        "type" : "text",
+        "id" : "account_text",
+        "label" : "Account Title"
+      },
+      {
+        "type": "header",
+        "content": "Advanced"
+      },
+      {
+        "type" : "text",
+        "id" : "css_class",
+        "label" : "CSS Class"
+      }      
+    ]
+  }
+{% endschema %}
